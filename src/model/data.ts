@@ -1,4 +1,5 @@
 import { DifficultyEnum } from '../enums/difficulty.enum';
+import { ICard } from '../interfaces/card.interface';
 
 export class Data {
 
@@ -6,7 +7,7 @@ export class Data {
   private readonly normal: Array<string> = ['🎄', '🎱', '🧧', '🎀'];
   private readonly hard: Array<string> = ['🎁', '🏓', '🎠', '🎡', '💎'];
 
-  public data: Array<string> = [];
+  public cards: Array<ICard> = [];
 
   constructor(private readonly difficulty: DifficultyEnum) {
 
@@ -16,6 +17,11 @@ export class Data {
       3: [...this.easy, ...this.normal, ...this.hard]
     }[difficulty];
 
-    this.data = [...selectedValues];
+    this.cards = [...selectedValues.map((value) => {
+      return {
+        value: value,
+        visible: false
+      } as ICard;
+    })];
   }
 }

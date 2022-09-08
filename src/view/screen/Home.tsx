@@ -9,6 +9,10 @@ const windowHeight = Dimensions.get('window').height;
 const Home = () => {
   const [screen, setScreen] = useState<'board' | 'game' | null>(null);
 
+  const handleBackButton = () => {
+    setScreen(null);
+  };
+
   const handleClickButtons = (screen: 'board' | 'game' | null) => {
     setScreen(screen);
   };
@@ -18,13 +22,17 @@ const Home = () => {
       <View style={styles.mainView}>
         <Text style={styles.logo}>Matching Game</Text>
         <View style={styles.buttonsView}>
-          <TouchableOpacity onPress={() => handleClickButtons('board')} style={styles.boardButton}>Board</TouchableOpacity>
-          <TouchableOpacity onPress={() => handleClickButtons('game')} style={styles.newGameButton}>New Game</TouchableOpacity>
+          <TouchableOpacity onPress={() => handleClickButtons('board')}>
+            <Text style={styles.boardButton}>Board</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleClickButtons('game')}>
+            <Text style={styles.newGameButton}>New Game</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
   } else {
-    return (screen === 'game') ? <Game /> : <Board />;
+    return (screen === 'game') ? <Game handleBackButton={handleBackButton} /> : <Board />;
   }
 
 };

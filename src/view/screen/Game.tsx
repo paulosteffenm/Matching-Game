@@ -1,15 +1,145 @@
-import { useEffect } from 'react';
-import { Text } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { GameController } from '../../controller/game.controller';
+import { DifficultyEnum } from '../../enums/difficulty.enum';
+import { ICard } from '../../interfaces/card.interface';
+import CardComponent from '../components/Card.Component';
 
-const Game = () => {
+const windowHeight = Dimensions.get('window').height;
+const MARGIN_SVG = 10;
+const HEIGHT_SVG = 50;
 
-  useEffect(() => {
-    console.log('board screen');
-  }, []);
+interface IGameProps {
+  handleBackButton: () => void
+}
+
+const Game = ({ handleBackButton }: IGameProps) => {
+
+  let gameController: GameController | null = null;
+
+  const [cards, setCards] = useState<Array<ICard>>([]);
+
+  const handleSetDifficulty = (difficulty: DifficultyEnum) => {
+    gameController = new GameController(difficulty);
+    setCards(gameController.data.cards);
+  };
+
+  console.log(cards.length);
 
   return (
-    <Text>{'game'}</Text>
+    <>
+      <View style={styles.backButton}>
+        <TouchableOpacity onPress={() => handleBackButton()}>
+          <svg version="1.1" style={styles.svgStyle} fill="#FFF" width={HEIGHT_SVG} id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 219.151 219.151" >
+            <g>
+              <path d="M109.576,219.151c60.419,0,109.573-49.156,109.573-109.576C219.149,49.156,169.995,0,109.576,0S0.002,49.156,0.002,109.575
+		C0.002,169.995,49.157,219.151,109.576,219.151z M109.576,15c52.148,0,94.573,42.426,94.574,94.575
+		c0,52.149-42.425,94.575-94.574,94.576c-52.148-0.001-94.573-42.427-94.573-94.577C15.003,57.427,57.428,15,109.576,15z"/>
+              <path d="M94.861,156.507c2.929,2.928,7.678,2.927,10.606,0c2.93-2.93,2.93-7.678-0.001-10.608l-28.82-28.819l83.457-0.008
+		c4.142-0.001,7.499-3.358,7.499-7.502c-0.001-4.142-3.358-7.498-7.5-7.498l-83.46,0.008l28.827-28.825
+		c2.929-2.929,2.929-7.679,0-10.607c-1.465-1.464-3.384-2.197-5.304-2.197c-1.919,0-3.838,0.733-5.303,2.196l-41.629,41.628
+		c-1.407,1.406-2.197,3.313-2.197,5.303c0.001,1.99,0.791,3.896,2.198,5.305L94.861,156.507z"/>
+            </g>
+          </svg>
+
+        </TouchableOpacity>
+      </View>
+      {(cards.length === 0) ?
+        <View style={styles.mainView}>
+          <Text style={styles.logo}>Select difficulty</Text>
+          <View style={styles.buttonsView}>
+            <TouchableOpacity onPress={() => handleSetDifficulty(DifficultyEnum.Easy)}>
+              <Text style={styles.easyButton}>Easy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSetDifficulty(DifficultyEnum.Normal)}>
+              <Text style={styles.normalButton}>Normal</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSetDifficulty(DifficultyEnum.Hard)}>
+              <Text style={styles.hardButton}>Hard</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        :
+        <View style={styles.boardView}>
+          <View style={styles.boardCards}>
+            {cards.map((card, index) => <CardComponent key={index} card={card} />)}
+          </View>
+        </View>
+      }
+    </>
   );
 };
 
 export default Game;
+
+const styles = StyleSheet.create({
+  backButton: {
+    backgroundColor: '#333',
+  },
+  svgStyle: {
+    marginTop: MARGIN_SVG,
+    marginLeft: 10,
+  },
+  mainView: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#333',
+    height: windowHeight - MARGIN_SVG - HEIGHT_SVG,
+  },
+  logo: {
+    color: '#FFF',
+    fontFamily: 'Helvetica',
+    fontSize: 50
+  },
+  buttonsView: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10
+  },
+  easyButton: {
+    backgroundColor: '#19E352',
+    color: '#FFF',
+    fontSize: 24,
+    padding: 8,
+    fontWeight: '700',
+    fontFamily: 'Helvetica',
+    borderRadius: 2,
+    minWidth: 150,
+    textAlign: 'center'
+  },
+  normalButton: {
+    backgroundColor: '#1CA4FD',
+    color: '#FFF',
+    fontSize: 24,
+    padding: 8,
+    fontWeight: '700',
+    fontFamily: 'Helvetica',
+    borderRadius: 2,
+    minWidth: 150,
+    textAlign: 'center'
+  },
+  hardButton: {
+    backgroundColor: '#E50914',
+    color: '#FFF',
+    fontSize: 24,
+    padding: 8,
+    fontWeight: '700',
+    fontFamily: 'Helvetica',
+    borderRadius: 2,
+    minWidth: 150,
+    textAlign: 'center'
+  },
+  boardView: {
+    backgroundColor: '#333',
+    height: windowHeight - MARGIN_SVG - HEIGHT_SVG,
+  },
+  boardCards:{
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  }
+});
