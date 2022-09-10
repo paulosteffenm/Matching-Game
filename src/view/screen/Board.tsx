@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
 import { Text } from 'react-native';
+import { Score } from '../../model/score';
 
-const Board = () => {
+interface IBoardProps {
+  score: Score
+}
 
-  useEffect(() => {
-    console.log('board screen');
-  }, []);
+const Board = ({ score }: IBoardProps) => {
 
   return (
     <Text>{'board'}</Text>

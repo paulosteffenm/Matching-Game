@@ -5,13 +5,26 @@ import { Data } from '../model/data';
 export class GameController {
 
   public data: Data;
-  public firstClickedCard: ICard | null = null;
-  public secondClickedCard: ICard | null = null;
-  public lastMatchingCards = true;
+  private firstClickedCard: ICard | null = null;
+  private secondClickedCard: ICard | null = null;
+  private lastMatchingCards = true;
+  private currentPoints: number;
 
-  constructor(private readonly difficulty: DifficultyEnum) {
+  constructor(
+    private readonly difficulty: DifficultyEnum,
+    private readonly initialPoints: number
+  ) {
     this.data = new Data(difficulty);
+    this.currentPoints = initialPoints;
     this.shuffle();
+  }
+
+  public get points(): number {
+    return this.currentPoints;
+  }
+
+  public get wonTheGame(): boolean {
+    return this.data.cards.every((card) => card.visible);
   }
 
   private clearNonMatchingCards(): void {
@@ -24,9 +37,12 @@ export class GameController {
     this.lastMatchingCards = (firstCard.value === secondCard.value);
     if (!this.lastMatchingCards) {
       this.secondClickedCard = secondCard;
+      this.currentPoints -= 5;
     } else {
       this.firstClickedCard = null;
       this.secondClickedCard = null;
+
+      this.currentPoints += 20;
     }
   }
 
@@ -82,5 +98,4 @@ export class GameController {
     }
 
   }
-
 }

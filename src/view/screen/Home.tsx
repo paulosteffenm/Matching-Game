@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
+import { Score } from '../../model/score';
 import Board from './Board';
 import Game from './Game';
 
 const windowHeight = Dimensions.get('window').height;
-
+const score = new Score();
 const Home = () => {
   const [screen, setScreen] = useState<'board' | 'game' | null>(null);
 
@@ -32,7 +33,7 @@ const Home = () => {
       </View>
     );
   } else {
-    return (screen === 'game') ? <Game handleBackButton={handleBackButton} /> : <Board />;
+    return (screen === 'game') ? <Game handleBackButton={handleBackButton} score={score} /> : <Board score={score} />;
   }
 
 };

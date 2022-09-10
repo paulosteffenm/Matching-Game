@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import { GameController } from '../../controller/game.controller';
 import { DifficultyEnum } from '../../enums/difficulty.enum';
 import { ICard } from '../../interfaces/card.interface';
+import { Score } from '../../model/score';
 import CardComponent from '../components/Card.Component';
 
 const windowHeight = Dimensions.get('window').height;
@@ -11,22 +12,36 @@ const HEIGHT_SVG = 50;
 
 interface IGameProps {
   handleBackButton: () => void
+  score: Score
 }
 
 let gameController: GameController | null = null;
 
-const Game = ({ handleBackButton }: IGameProps) => {
+const Game = ({ handleBackButton, score }: IGameProps) => {
 
   const [cards, setCards] = useState<Array<ICard>>([]);
+  const [points, setPoints] = useState<number>(30);
+  const [isOver, setIsOver] = useState<boolean>(false);
+  const [buttonMsg, setButtonMsg] = useState<string>('');
 
   const handleSetDifficulty = (difficulty: DifficultyEnum) => {
-    gameController = new GameController(difficulty);
+    gameController = new GameController(difficulty, points);
     setCards(gameController.data.cards);
   };
 
   const handleClickCard = (id: number) => {
     const newCards = gameController!.onClickCard(id);
     setCards(newCards);
+
+    const newPoints = gameController!.points;
+    setPoints(newPoints);
+
+    const wonTheGame = gameController?.wonTheGame;
+    (newPoints === 0 || wonTheGame) ? setIsOver(true) : setIsOver(false);
+    (wonTheGame) ? setButtonMsg('You Won') : setButtonMsg('You Lose');
+    if (wonTheGame) {
+      score.saveScore(newPoints);
+    }
   };
 
   return (
@@ -62,9 +77,21 @@ const Game = ({ handleBackButton }: IGameProps) => {
         </View>
         :
         <View style={styles.boardView}>
-          <View style={styles.boardCards}>
-            {cards.map((card, index) => <CardComponent handleClickCard={handleClickCard} key={index} card={card} />)}
+          <View style={styles.pointsView}>
+            <Text style={styles.textPoints}>Points: </Text>
+            <Text style={styles.currentPoints}>{points}</Text>
           </View>
+          {(isOver)
+            ? <TouchableOpacity
+              onPress={() => handleBackButton()}
+              style={(gameController?.wonTheGame) ? [styles.wonButton] : [styles.loseButton]}
+            >
+              {buttonMsg}
+            </TouchableOpacity>
+            : <View style={styles.boardCards}>
+              {cards.map((card, index) => <CardComponent handleClickCard={handleClickCard} key={index} card={card} />)}
+            </View>}
+
         </View>
       }
     </>
@@ -136,7 +163,8 @@ const styles = StyleSheet.create({
   },
   boardView: {
     backgroundColor: '#333',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     height: windowHeight - MARGIN_SVG - HEIGHT_SVG,
   },
   boardCards: {
@@ -144,5 +172,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
+  },
+  pointsView: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  textPoints: {
+    color: '#FFF',
+    fontFamily: 'Helvetica',
+    fontSize: 50
+  },
+  currentPoints: {
+    color: '#e50914',
+    fontFamily: 'Helvetica',
+    fontSize: 50
+  },
+  wonButton: {
+    backgroundColor: '#19E352',
+    color: '#FFF',
+    fontSize: 24,
+    padding: 8,
+    fontWeight: '700',
+    fontFamily: 'Helvetica',
+    borderRadius: 2,
+    width: 150,
+    textAlign: 'center'
+  },
+  loseButton: {
+    backgroundColor: '#E50914',
+    color: '#FFF',
+    fontSize: 24,
+    padding: 8,
+    fontWeight: '700',
+    fontFamily: 'Helvetica',
+    borderRadius: 2,
+    width: 150,
+    textAlign: 'center'
   }
 });
