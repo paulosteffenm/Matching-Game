@@ -24,7 +24,14 @@ const Game = ({ handleBackButton }: IGameProps) => {
     setCards(gameController.data.cards);
   };
 
-  console.log(cards.length);
+  const handleClickCard = (id:number) =>{
+    const copyCards = [...cards];
+    const cardFound = copyCards.find((card) => card.id === id);
+    if(cardFound){
+      cardFound.visible = true;
+      setCards(copyCards);
+    }
+  };
 
   return (
     <>
@@ -62,7 +69,7 @@ const Game = ({ handleBackButton }: IGameProps) => {
         :
         <View style={styles.boardView}>
           <View style={styles.boardCards}>
-            {cards.map((card, index) => <CardComponent key={index} card={card} />)}
+            {cards.map((card, index) => <CardComponent handleClickCard={handleClickCard} key={index} card={card} />)}
           </View>
         </View>
       }

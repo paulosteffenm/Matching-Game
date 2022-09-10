@@ -17,8 +17,9 @@ export class Data {
       3: [...this.easy, ...this.normal, ...this.hard]
     }[difficulty];
 
-    this.cards = [...selectedValues.map((value) => {
+    this.cards = [...selectedValues.map((value, index) => {
       return {
+        id: index,
         value: value,
         visible: false
       } as ICard;

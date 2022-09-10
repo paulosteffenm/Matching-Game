@@ -3,12 +3,13 @@ import { ICard } from '../../interfaces/card.interface';
 
 interface ICardProps {
   card: ICard
+  handleClickCard: (id: number)=> void
 }
 
-const CardComponent = ({ card }: ICardProps) => {
+const CardComponent = ({ card, handleClickCard}: ICardProps) => {
 
   return (
-    <TouchableOpacity style={styles.cardButton}>
+    <TouchableOpacity style={styles.cardButton} onPress={() =>handleClickCard(card.id)}>
       {card.visible ?
         <Text>
           {card.value}
