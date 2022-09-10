@@ -3,13 +3,18 @@ import { ICard } from '../../interfaces/card.interface';
 
 interface ICardProps {
   card: ICard
-  handleClickCard: (id: number)=> void
+  handleClickCard: (id: number) => void
 }
 
-const CardComponent = ({ card, handleClickCard}: ICardProps) => {
+const CardComponent = ({ card, handleClickCard }: ICardProps) => {
+
+  const cardStyles: Array<any> = [styles.cardButton];
+  if (card.visible) {
+    cardStyles.push(styles.cardVisible);
+  }
 
   return (
-    <TouchableOpacity style={styles.cardButton} onPress={() =>handleClickCard(card.id)}>
+    <TouchableOpacity style={cardStyles} onPress={() => handleClickCard(card.id)}>
       {card.visible ?
         <Text>
           {card.value}
@@ -26,7 +31,7 @@ export default CardComponent;
 
 const styles = StyleSheet.create({
   cardButton: {
-    margin: 10,
+    margin: 5,
     padding: 20,
     color: '#F0F0F0',
     backgroundColor: '#305080',
@@ -34,5 +39,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    minWidth: 60
+  },
+  cardVisible: {
+    backgroundColor: '#97DE52'
   }
 });

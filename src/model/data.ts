@@ -17,7 +17,9 @@ export class Data {
       3: [...this.easy, ...this.normal, ...this.hard]
     }[difficulty];
 
-    this.cards = [...selectedValues.map((value, index) => {
+    const availableCards = [...selectedValues, ...selectedValues];
+
+    this.cards = [...availableCards.map((value, index) => {
       return {
         id: index,
         value: value,
