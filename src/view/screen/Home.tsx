@@ -33,7 +33,7 @@ const Home = () => {
       </View>
     );
   } else {
-    return (screen === 'game') ? <Game handleBackButton={handleBackButton} score={score} /> : <Board score={score} />;
+    return (screen === 'game') ? <Game handleBackButton={handleBackButton} score={score} /> : <Board handleBackButton={handleBackButton} score={score} />;
   }
 
 };

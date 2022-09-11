@@ -26,6 +26,7 @@ const Game = ({ handleBackButton, score }: IGameProps) => {
 
   const handleSetDifficulty = (difficulty: DifficultyEnum) => {
     gameController = new GameController(difficulty, points);
+    score.newGame();
     setCards(gameController.data.cards);
   };
 
@@ -86,7 +87,11 @@ const Game = ({ handleBackButton, score }: IGameProps) => {
               onPress={() => handleBackButton()}
               style={(gameController?.wonTheGame) ? [styles.wonButton] : [styles.loseButton]}
             >
-              {buttonMsg}
+              <View>
+                <Text style={styles.buttonMsg}>
+                  {buttonMsg}
+                </Text>
+              </View>
             </TouchableOpacity>
             : <View style={styles.boardCards}>
               {cards.map((card, index) => <CardComponent handleClickCard={handleClickCard} key={index} card={card} />)}
@@ -209,5 +214,12 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     width: 150,
     textAlign: 'center'
+  },
+  buttonMsg: {
+    color: '#FFF',
+    fontWeight: '700',
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+    fontSize: 24,
   }
 });
