@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10
   },
   newGameButton: {
     backgroundColor: '#e50914',
@@ -68,7 +67,8 @@ const styles = StyleSheet.create({
     padding: 8,
     fontWeight: '700',
     fontFamily: 'Helvetica',
-    borderRadius: 2
+    borderRadius: 2,
+    marginLeft: 10
   },
   boardButton: {
     backgroundColor: '#333',
